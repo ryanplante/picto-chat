@@ -1,0 +1,186 @@
+/* Set up basic page styling */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Press Start 2P', cursive; /* This is a typical pixelated font, you can import it from Google Fonts or find a similar one */
+    background-color: #fcba03; /* Or any retro screen-like background color */
+    color: #333;
+}
+
+header {
+    background-color: #f7d708;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 4px solid #333;
+}
+
+header h1, header h2 {
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+    color: #333;
+}
+
+#setUsernameBtn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+#setUsernameBtn:hover {
+    background-color: #444;
+}
+
+main {
+    background-color: #fff8dc;
+    padding: 10px;
+}
+
+.roomLink {
+    background-color: #f0e68c;
+    margin-bottom: 5px;
+    padding: 5px;
+    border: 2px solid #333;
+    text-align: left;
+}
+
+.roomLink a {
+    color: #333;
+    text-decoration: none;
+    font-size: 1em;
+}
+
+.userCount {
+    float: right;
+    background-color: #333;
+    color: #fff;
+    padding: 0 5px;
+}
+
+
+/* Continue from previous styles... */
+
+#chat-container {
+    background-color: #f7f7f7; /* A light grey background, reminiscent of old computer interfaces */
+    border: 3px solid #333; /* Pixelated border */
+    padding: 10px;
+    max-width: 800px; /* Or your preferred fixed width */
+    margin: 20px auto;
+}
+
+#chat-history {
+    height: 300px; /* Fixed height for the chat history area */
+    overflow-y: scroll; /* Allow scrolling */
+    background-color: #dcdcdc; /* A grey that doesn't strain the eyes, like old monitors */
+    border: 2px solid #333; /* Pixelated border */
+    font-size: 16px; /* Larger text for readability */
+    font-family: 'Press Start 2P', cursive;
+    padding: 5px;
+}
+
+#chat-history p {
+    background-color: #e0e0e0; /* Light grey for message bubbles */
+    border: 1px solid #333; /* Pixelated border for each message */
+    padding: 5px;
+    margin: 5px 0;
+}
+
+#messageType {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 5px;
+    margin-bottom: 10px;
+    font-family: 'Press Start 2P', cursive;
+}
+
+#message-form {
+    display: flex;
+    margin-top: 10px;
+}
+
+#m {
+    flex-grow: 1;
+    padding: 5px;
+    margin-right: 5px;
+    border: 2px solid #333; /* Pixelated border */
+    font-family: 'Press Start 2P', cursive;
+}
+
+button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive;
+}
+
+button:hover {
+    background-color: #444;
+}
+
+canvas#drawing-canvas {
+    /* No changes here, just ensure it has a pixelated border if shown */
+    border: 2px solid #333;
+}
+
+/* Optional: style the scrollbar for chat history to look more retro */
+#chat-history::-webkit-scrollbar {
+    width: 12px;
+}
+
+#chat-history::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#chat-history::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+#chat-history::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Add to your existing style.css content */
+
+.home-link {
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    text-decoration: none;
+    font-family: 'Press Start 2P', cursive;
+    position: absolute; /* Positioning it on the top left */
+    left: 10px;
+    top: 10px;
+}
+
+.home-link:hover {
+    background-color: #444;
+}
+
+/* Style for the message author name above the image */
+#chat-history div p {
+    background-color: transparent; /* Removes the background for the author's name */
+    padding: 2px;
+    margin: 0;
+    font-size: 0.8em; /* Smaller font size for the author's name */
+}
+
+/* Continue with the rest of your styles... */
+
+
+/* Add any additional styles or tweaks as necessary */
+
+/* Remember to keep the @import at the top of the CSS file */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+
+/* Import the font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+
+

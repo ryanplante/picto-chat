@@ -95,7 +95,7 @@ io.on('connection', (socket) => {
         const user = connectedUsers[socket.id];
         const roomId = user.roomId;
         console.log(user);
-        const roomUserCount = getConnectedUsersByRoom(roomId);// Object.values(connectedUsers).filter(u => u.roomId === roomId).length - 1; // -1 to account for the current disconnecting user
+        const roomUserCount = getConnectedUsersByRoom(roomId) -1; // -1 to account for the current disconnecting user
         io.emit('updateUserCount', { roomId, count: roomUserCount });
         console.log(`${user?.username} disconnected`);
         delete connectedUsers[socket.id]; // Remove user from connected users

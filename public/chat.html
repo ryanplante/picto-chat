@@ -8,6 +8,7 @@
 </head>
 <body>
     <header>
+        <a href="/" class="home-link">Home</a>
         <div id="usernameDisplay">blank</div> <!-- Placeholder username, will be replaced by actual username from server -->
     </header>
     <div id="chat-container">
@@ -19,6 +20,7 @@
         <form id="message-form">
             <input id="m" autocomplete="off" /> <!-- Initially hidden, shown based on messageType -->
             <button type="submit">Send</button>
+            <button type="button" id="clearBtn">Clear</button> <!-- Clear Button -->
         </form>
         <canvas id="drawing-canvas" width="400" height="400" style="border:1px solid #000000; display:none;"></canvas> <!-- Initially hidden -->
         <audio id="alertSound" src="assets/alert.mp3" type="audio/mp3"></audio>
@@ -86,6 +88,15 @@
             socket.emit('chatMessage', blob)
         });
 
+        document.getElementById('clearBtn').addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent the default button click behavior
+            if(messageType.value === 'text') {
+                input.value = ''; // Clear the text input
+            } else if(messageType.value === 'drawing') {
+                context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+            }
+        });
+
         // Drawing functionality
         canvas.addEventListener('mousedown', function(e) {
             drawing = true;
@@ -111,9 +122,19 @@
                 messageElement = document.createElement('p');
                 messageElement.textContent = msg.author + ": " + msg.content;
             } else if(msg.type === 'drawing') {
-                messageElement = new Image();
-                messageElement.src = msg.content;
-                messageElement.alt = 'Drawing by ' + msg.author;
+                // Create a container for the image and the author's name
+                messageElement = document.createElement('div');
+
+                // Add the author's name
+                var authorName = document.createElement('p');
+                authorName.textContent = msg.author;
+                messageElement.appendChild(authorName);
+
+                // Add the image
+                var imageElement = new Image();
+                imageElement.src = msg.content;
+                imageElement.alt = 'Drawing by ' + msg.author;
+                messageElement.appendChild(imageElement);
             }
             document.getElementById('chat-history').appendChild(messageElement);
         }
