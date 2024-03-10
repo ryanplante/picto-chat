@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="style.css"> <!-- Make sure to create a style.css file for your styles -->
+</head>
+<body>
+    <header>
+        <h1>Chat Rooms</h1>
+        <h2 id="usernameDisplay">Welcome, </h2>
+        <button id="setUsernameBtn">Set Username</button>
+    </header>
+    <main>
+        <div id="roomList">
+            
+            <div class="roomLink" data-roomid="1"><a href="/chat.html?roomId=1" class="roomLink">Chat Room 1</a> <span class="userCount">0/10</span></div>
+            <div class="roomLink" data-roomid="2"><a href="/chat.html?roomId=2" class="roomLink">Chat Room 2</a> <span class="userCount">0/10</span></div>
+            <div class="roomLink" data-roomid="3"><a href="/chat.html?roomId=3" class="roomLink">Chat Room 3</a><span class="userCount">0/10</span></div>
+        </div>        
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script> 
+</body>
+</html>

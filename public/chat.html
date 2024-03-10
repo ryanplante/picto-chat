@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div id="usernameDisplay">blank</div> <!-- Placeholder username, will be replaced by actual username from server -->
+    </header>
+    <div id="chat-container">
+        <div id="chat-history"></div> <!-- Updated to div for mixed content -->
+        <select id="messageType">
+            <option value="text">Text</option>
+            <option value="drawing">Drawing</option>
+        </select>
+        <form id="message-form">
+            <input id="m" autocomplete="off" /> <!-- Initially hidden, shown based on messageType -->
+            <button type="submit">Send</button>
+        </form>
+        <canvas id="drawing-canvas" width="400" height="400" style="border:1px solid #000000; display:none;"></canvas> <!-- Initially hidden -->
+        <audio id="alertSound" src="assets/alert.mp3" type="audio/mp3"></audio>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        var username = localStorage.getItem('username') || 'Guest-1234'; // Fallback to 'Guest-1234' if not set
+        var messageType = document.getElementById('messageType');
+        var form = document.getElementById('message-form');
+        var input = document.getElementById('m');
+        var canvas = document.getElementById('drawing-canvas');
+        var context = canvas.getContext('2d');
+        var drawing = false;
+        var urlParams = new URLSearchParams(window.location.search);
+        var roomId = urlParams.get('roomId') || '1'; // Default to '1' if roomId is not specified in the URL
+
+
+        // Listen for the username update from the server
+        socket.on('usernameUpdated', function(updatedUsername) {
+            username = updatedUsername
+            document.getElementById('usernameDisplay').textContent = updatedUsername;
+            localStorage.setItem('username', newUsername);
+        });
+        
+
+        // Emit join room event with roomId when the page loads
+        socket.emit('joinRoom', { username, roomId });
+
+        // Username display and change functionality
+        document.getElementById('usernameDisplay').addEventListener('click', function() {
+            var newUsername = prompt('Enter your new username:', username);
+            if(newUsername) {
+                username = newUsername;
+                this.textContent = username;
+                socket.emit('changeUsername', { newUsername, id: socket.id });
+            }
+        });
+
+        // Message type selection handling
+        messageType.addEventListener('change', function() {
+            if(this.value === 'text') {
+                canvas.style.display = 'none';
+                input.style.display = 'block';
+            } else {
+                input.style.display = 'none';
+                canvas.style.display = 'block';
+            }
+        });
+
+        // Form submission for text and drawing messages
+        form.addEventListener('submit', function(e) {
+            let blob
+            e.preventDefault();
+            if(messageType.value === 'text' && input.value) {
+                blob = { type: 'text', content: input.value, author: username, roomId: roomId }
+                input.value = ''; // Clear the text input
+            } else if(messageType.value === 'drawing') {
+                var dataURL = canvas.toDataURL('image/png');
+                blob = { type: 'drawing', content: dataURL, author: username, roomId: roomId }
+                context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+            }
+            addMessageToChatHistory(blob)
+            socket.emit('chatMessage', blob)
+        });
+
+        // Drawing functionality
+        canvas.addEventListener('mousedown', function(e) {
+            drawing = true;
+            context.beginPath();
+            context.moveTo(e.offsetX, e.offsetY);
+        });
+
+        canvas.addEventListener('mousemove', function(e) {
+            if(drawing) {
+                context.lineTo(e.offsetX, e.offsetY);
+                context.stroke();
+            }
+        });
+
+        canvas.addEventListener('mouseup', function() {
+            drawing = false;
+        });
+
+        // Handling incoming messages and chat history
+        function addMessageToChatHistory(msg) {
+            var messageElement;
+            if(msg.type === 'text') {
+                messageElement = document.createElement('p');
+                messageElement.textContent = msg.author + ": " + msg.content;
+            } else if(msg.type === 'drawing') {
+                messageElement = new Image();
+                messageElement.src = msg.content;
+                messageElement.alt = 'Drawing by ' + msg.author;
+            }
+            document.getElementById('chat-history').appendChild(messageElement);
+        }
+
+        function addMessageToChatHistoryAndDing(msg) {
+            var sound = document.getElementById('alertSound');
+            sound.play();
+            addMessageToChatHistory(msg);
+        }
+
+        socket.on('loadHistory', function(history) {
+            history.forEach(addMessageToChatHistory);
+        });
+
+        socket.on('newMessage', function(msg){
+            addMessageToChatHistoryAndDing(msg);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+             socket.emit('getUsername');
+    });
+    </script>
+</body>
+</html>
