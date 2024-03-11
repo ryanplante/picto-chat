@@ -80,7 +80,7 @@ io.on('connection', (socket) => {
                 const roomUserCount = getConnectedUsersByRoom(i);
                 console.log(roomUserCount)
                 //console.log(Object.values(connectedUsers));
-                io.emit('updateUserCount', { i, roomUserCount });
+                io.emit('updateUserCount', { roomId: i, count: roomUserCount });
             }
         })
 
