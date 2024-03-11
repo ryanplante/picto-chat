@@ -15,6 +15,11 @@ socket.on('usernameSet', (newUsername) => {
     }
 });
 
+socket.on('usernameTaken', ({ message }) => {
+    alert(message);
+    // Prompt the user to choose a different username, or handle as appropriate
+});
+
 
 socket.on('updateUserCount', ({ roomId, count }) => {
     const roomElement = document.querySelector(`.roomLink[data-roomid="${roomId}"] .userCount`);
@@ -27,7 +32,7 @@ socket.on('updateUserCount', ({ roomId, count }) => {
 document.addEventListener('DOMContentLoaded', function() {
     // Request the current username from storage
     const newUsername = localStorage.getItem('username') || 'guest'
-    socket.emit('setUsername', { newUsername });
+    socket.emit('setUsernameNew', { newUsername });
     socket.emit('getUserCount');
      // Fallback to 'Guest-1234' if not set
     //socket.emit('getUsername');

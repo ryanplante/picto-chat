@@ -38,6 +38,11 @@ function getConnectedUsersByRoom(room)
     return Object.values(connectedUsers).filter(u => u.roomId === String(room).trim()).length;
 }
 
+function isUserTaken(username) {
+    return Object.values(connectedUsers).some(user => user.username === username);
+}
+
+
 
 io.on('connection', (socket) => {
     // User joins the lobby
@@ -54,15 +59,47 @@ io.on('connection', (socket) => {
     });
 
         // Event to set username
+        socket.on('setUsernameNew', ({ newUsername }) => {
+            const user = connectedUsers[socket.id];
+            if (user) {
+                if (isUserTaken(newUsername))
+                {
+                    console.log(`Username for user ${socket.id} changed to ${newUsername}`);
+                    let i = 1;
+                    while (isUserTaken(`guest${i}`))
+                    {
+                        i++;
+                    }
+                    user.username = `guest${i}`;
+                    socket.emit('usernameSet', `guest${i}`);
+                }
+                else
+                {
+                    user.username = newUsername;
+                    // Emit an event back to the client to confirm the username change
+                    socket.emit('usernameSet', newUsername);
+                }
+            }
+        });
+
         socket.on('setUsername', ({ newUsername }) => {
             const user = connectedUsers[socket.id];
             if (user) {
-                user.username = newUsername;
-                console.log(`Username for user ${socket.id} changed to ${newUsername}`);
-                // Emit an event back to the client to confirm the username change
-                socket.emit('usernameSet', newUsername);
+                if (isUserTaken(newUsername))
+                {
+                    socket.emit('usernameTaken', { message: 'Username is already taken. Please choose a different one.' });
+                }
+                else
+                {
+                    user.username = newUsername;
+                    console.log(`Username for user ${socket.id} changed to ${newUsername}`);
+                    // Emit an event back to the client to confirm the username change
+                    socket.emit('usernameSet', newUsername);
+                }
             }
         });
+
+
         
         // Optional: Event to get username for a user
         socket.on('getUsername', () => {
